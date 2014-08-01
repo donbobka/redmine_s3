@@ -19,7 +19,8 @@ module RedmineS3
     module InstanceMethods
       def put_to_s3
         if @temp_file && (@temp_file.size > 0)
-          self.disk_filename = Attachment.disk_filename(filename) if disk_filename.blank?
+          self.disk_directory = target_directory
+          self.disk_filename = Attachment.disk_filename(filename, disk_directory) if disk_filename.blank?
           logger.debug("Uploading to #{disk_filename}")
           content = @temp_file.respond_to?(:read) ? @temp_file.read : @temp_file
           RedmineS3::Connection.put(disk_filename, content, self.content_type)
